@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,589 +9,275 @@ import {
   Image,
   StatusBar,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { UserProfile, Address, Order } from '../../types/index.ts'; // ✅ correct path (two levels up)
 
-// Dummy profile data
-const userProfile: UserProfile = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '+91 98765 43210',
-  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop',
-  joinedDate: 'January 2024',
-};
-
-const savedAddresses: Address[] = [
-  {
-    id: '1',
-    type: 'Home',
-    address: '123 Main Street, Kumananchavadi',
-    city: 'Chennai',
-    pincode: '600056',
-    isDefault: true,
-  },
-  {
-    id: '2',
-    type: 'Work',
-    address: '456 Business Park, Ambattur',
-    city: 'Chennai',
-    pincode: '600053',
-    isDefault: false,
-  },
-];
-
-const orderHistory: Order[] = [
-  {
-    id: 'ORD001',
-    date: '2024-02-20',
-    items: 'Fresh Fruits, Vegetables',
-    total: '₹450',
-    status: 'Delivered',
-  },
-  {
-    id: 'ORD002',
-    date: '2024-02-18',
-    items: 'Dresses, Beauty Products',
-    total: '₹1,299',
-    status: 'In Transit',
-  },
-  {
-    id: 'ORD003',
-    date: '2024-02-15',
-    items: 'Organic Bananas, Apples',
-    total: '₹180',
-    status: 'Delivered',
-  },
-];
-
-interface ProfileScreenProps {
-  onClose?: () => void;
-}
-
-const ProfileScreen: React.FC<ProfileScreenProps> = ({ onClose }) => {
-  const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState<'orders' | 'addresses' | 'settings'>('orders');
-
-  const handleClose = () => {
-    if (onClose) {
-      onClose();
-    } else {
-      navigation.goBack();
-    }
-  };
-
-  const renderProfileHeader = () => (
-    <View style={styles.profileHeader}>
-      <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-        <Text style={styles.closeButtonText}>✕</Text>
-      </TouchableOpacity>
-      <Image source={{ uri: userProfile.avatar }} style={styles.profileAvatar} />
-      <Text style={styles.profileName}>{userProfile.name}</Text>
-      <Text style={styles.profileEmail}>{userProfile.email}</Text>
-      <Text style={styles.profilePhone}>{userProfile.phone}</Text>
-      <Text style={styles.profileJoined}>Member since {userProfile.joinedDate}</Text>
-
-      <View style={styles.profileStats}>
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{orderHistory.length}</Text>
-          <Text style={styles.statLabel}>Orders</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>{savedAddresses.length}</Text>
-          <Text style={styles.statLabel}>Addresses</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statNumber}>3</Text>
-          <Text style={styles.statLabel}>Offers</Text>
-        </View>
-      </View>
-    </View>
-  );
-
-  const renderProfileTabs = () => (
-    <View style={styles.profileTabs}>
-      <TouchableOpacity
-        style={[styles.tab, activeTab === 'orders' && styles.activeTab]}
-        onPress={() => setActiveTab('orders')}
-      >
-        <Text style={[styles.tabText, activeTab === 'orders' && styles.activeTabText]}>Orders</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.tab, activeTab === 'addresses' && styles.activeTab]}
-        onPress={() => setActiveTab('addresses')}
-      >
-        <Text style={[styles.tabText, activeTab === 'addresses' && styles.activeTabText]}>Addresses</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.tab, activeTab === 'settings' && styles.activeTab]}
-        onPress={() => setActiveTab('settings')}
-      >
-        <Text style={[styles.tabText, activeTab === 'settings' && styles.activeTabText]}>Settings</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  const renderOrdersTab = () => (
-    <View style={styles.tabContent}>
-      {orderHistory.map((order) => (
-        <View key={order.id} style={styles.orderCard}>
-          <View style={styles.orderHeader}>
-            <Text style={styles.orderId}>{order.id}</Text>
-            <View
-              style={[
-                styles.orderStatus,
-                {
-                  backgroundColor:
-                    order.status === 'Delivered'
-                      ? '#4CAF50'
-                      : order.status === 'In Transit'
-                      ? '#FFD700'
-                      : '#FF4444',
-                },
-              ]}
-            >
-              <Text style={styles.orderStatusText}>{order.status}</Text>
-            </View>
-          </View>
-          <Text style={styles.orderDate}>{order.date}</Text>
-          <Text style={styles.orderItems}>{order.items}</Text>
-          <View style={styles.orderFooter}>
-            <Text style={styles.orderTotal}>Total: {order.total}</Text>
-            <TouchableOpacity style={styles.orderDetailsButton}>
-              <Text style={styles.orderDetailsText}>View Details</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
-    </View>
-  );
-
-  const renderAddressesTab = () => (
-    <View style={styles.tabContent}>
-      {savedAddresses.map((address) => (
-        <View key={address.id} style={styles.addressCard}>
-          <View style={styles.addressHeader}>
-            <View style={styles.addressTypeContainer}>
-              <Text style={styles.addressType}>{address.type}</Text>
-              {address.isDefault && (
-                <View style={styles.defaultBadge}>
-                  <Text style={styles.defaultBadgeText}>Default</Text>
-                </View>
-              )}
-            </View>
-            <TouchableOpacity>
-              <Text style={styles.editAddressText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.addressLine}>{address.address}</Text>
-          <Text style={styles.addressLine}>
-            {address.city} - {address.pincode}
-          </Text>
-          <View style={styles.addressActions}>
-            <TouchableOpacity style={styles.addressAction}>
-              <Text style={styles.addressActionText}>Set as Default</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.addressAction, styles.deleteAction]}>
-              <Text style={[styles.addressActionText, styles.deleteActionText]}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
-      <TouchableOpacity style={styles.addAddressButton}>
-        <Text style={styles.addAddressIcon}>+</Text>
-        <Text style={styles.addAddressText}>Add New Address</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  const renderSettingsTab = () => (
-    <View style={styles.tabContent}>
-      <TouchableOpacity style={styles.settingItem}>
-        <Text style={styles.settingIcon}>👤</Text>
-        <View style={styles.settingInfo}>
-          <Text style={styles.settingTitle}>Edit Profile</Text>
-          <Text style={styles.settingSubtitle}>Update your personal information</Text>
-        </View>
-        <Text style={styles.settingArrow}>›</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.settingItem}>
-        <Text style={styles.settingIcon}>🔔</Text>
-        <View style={styles.settingInfo}>
-          <Text style={styles.settingTitle}>Notifications</Text>
-          <Text style={styles.settingSubtitle}>Manage your notification preferences</Text>
-        </View>
-        <Text style={styles.settingArrow}>›</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.settingItem}>
-        <Text style={styles.settingIcon}>🔒</Text>
-        <View style={styles.settingInfo}>
-          <Text style={styles.settingTitle}>Privacy & Security</Text>
-          <Text style={styles.settingSubtitle}>Manage your privacy settings</Text>
-        </View>
-        <Text style={styles.settingArrow}>›</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.settingItem}>
-        <Text style={styles.settingIcon}>💳</Text>
-        <View style={styles.settingInfo}>
-          <Text style={styles.settingTitle}>Payment Methods</Text>
-          <Text style={styles.settingSubtitle}>Add or remove payment options</Text>
-        </View>
-        <Text style={styles.settingArrow}>›</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.settingItem, styles.logoutButton]}>
-        <Text style={styles.settingIcon}>🚪</Text>
-        <View style={styles.settingInfo}>
-          <Text style={[styles.settingTitle, styles.logoutText]}>Log Out</Text>
-        </View>
-        <Text style={styles.settingArrow}>›</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
+const ProfileScreen = () => {
   return (
-    <SafeAreaView style={styles.profileContainer}>
+    <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#FFD700" barStyle="dark-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {renderProfileHeader()}
-        {renderProfileTabs()}
-        {activeTab === 'orders' && renderOrdersTab()}
-        {activeTab === 'addresses' && renderAddressesTab()}
-        {activeTab === 'settings' && renderSettingsTab()}
-        <View style={styles.profileFooter}>
-          <Text style={styles.profileFooterText}>Krazo Mart v1.0.0</Text>
+        {/* Header without close button (tab screen) */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Your account</Text>
+        </View>
+
+        {/* Phone number */}
+        <View style={styles.phoneRow}>
+          <Text style={styles.phone}>6384330170</Text>
+        </View>
+
+        {/* Add birthday */}
+        <TouchableOpacity style={styles.menuItem}>
+          <Text style={styles.menuText}>Add your birthday</Text>
+          <Text style={styles.chevron}>›</Text>
+        </TouchableOpacity>
+
+        {/* Three buttons row */}
+        <View style={styles.rowButtons}>
+          <TouchableOpacity style={styles.rowButton}>
+            <Text style={styles.rowButtonEmoji}>📦</Text>
+            <Text style={styles.rowButtonText}>Your orders</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.rowButton}>
+            <Text style={styles.rowButtonEmoji}>💰</Text>
+            <Text style={styles.rowButtonText}>Blinkit Money</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.rowButton}>
+            <Text style={styles.rowButtonEmoji}>❓</Text>
+            <Text style={styles.rowButtonText}>Need help?</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* App update banner */}
+        <View style={styles.updateBanner}>
+          <View>
+            <Text style={styles.updateTitle}>App update available</Text>
+            <Text style={styles.updateDesc}>bug fixes and improvements</Text>
+            <Text style={styles.updateVersion}>v17.79.1</Text>
+          </View>
+          <TouchableOpacity style={styles.updateButton}>
+            <Text style={styles.updateButtonText}>UPDATE</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Appearance */}
+        <View style={styles.appearanceRow}>
+          <Text style={styles.appearanceLabel}>Appearance</Text>
+          <TouchableOpacity style={styles.appearanceValue}>
+            <Text style={styles.appearanceText}>LIGHT ▼</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Hide sensitive items */}
+        <View style={styles.hideSensitive}>
+          <Text style={styles.hideSensitiveTitle}>Hide sensitive items</Text>
+          <Text style={styles.hideSensitiveDesc}>
+            Sexual wellness, nicotine products and other sensitive items will be hidden
+          </Text>
+          <TouchableOpacity>
+            <Text style={styles.knowMore}>Know more</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Your information section */}
+        <Text style={styles.sectionHeader}>Your information</Text>
+        <MenuItem text="Address book" />
+        <MenuItem text="Bookmarked recipes" />
+        <MenuItem text="Your wishlist" />
+        <MenuItem text="GST details" />
+        <MenuItem text="E-gift cards" />
+        <MenuItem text="Your prescriptions" />
+
+        {/* Payment and coupons */}
+        <Text style={styles.sectionHeader}>Payment and coupons</Text>
+        <MenuItem text="Wallet" />
+        <MenuItem text="Blinkit Money" />
+        <MenuItem text="Payment settings" />
+        <MenuItem text="Claim Gift card" />
+        <MenuItem text="Your collected rewards" />
+
+        {/* About us */}
+        <Text style={styles.sectionHeader}>About us</Text>
+        <MenuItem text="Account privacy" />
+        <MenuItem text="Notification preferences" />
+        <MenuItem text="Log out" />
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>blinkit  v17.79.0</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-// Styles (must be included)
+const MenuItem = ({ text }: { text: string }) => (
+  <TouchableOpacity style={styles.menuItem}>
+    <Text style={styles.menuText}>{text}</Text>
+    <Text style={styles.chevron}>›</Text>
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
-  profileContainer: {
+  container: {
     flex: 1,
     backgroundColor: '#FFF9E6',
   },
-  profileHeader: {
+  header: {
     backgroundColor: '#FFD700',
-    padding: 20,
+    paddingHorizontal: 15,
     paddingTop: 10,
-    alignItems: 'center',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    left: 20,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    justifyContent: 'center',
+    paddingBottom: 15,
     alignItems: 'center',
   },
-  closeButtonText: {
+  headerTitle: {
     fontSize: 18,
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  profileAvatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 4,
-    borderColor: '#FFF',
-    marginTop: 20,
-  },
-  profileName: {
-    fontSize: 22,
     fontWeight: 'bold',
     color: '#333',
-    marginTop: 10,
   },
-  profileEmail: {
-    fontSize: 14,
+  phoneRow: {
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+  },
+  phone: {
+    fontSize: 20,
+    fontWeight: '600',
     color: '#333',
-    opacity: 0.8,
-    marginTop: 4,
   },
-  profilePhone: {
-    fontSize: 14,
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFD700',
+    backgroundColor: '#FFF9E6',
+  },
+  menuText: {
+    fontSize: 16,
     color: '#333',
-    opacity: 0.8,
-    marginTop: 2,
   },
-  profileJoined: {
-    fontSize: 12,
-    color: '#333',
-    opacity: 0.6,
-    marginTop: 8,
+  chevron: {
+    fontSize: 18,
+    color: '#666',
   },
-  profileStats: {
+  rowButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingVertical: 20,
+    backgroundColor: '#FFF9E6',
+  },
+  rowButton: {
     alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 20,
-    padding: 15,
-    marginTop: 20,
-    width: '100%',
   },
-  statItem: {
-    alignItems: 'center',
-    flex: 1,
-  },
-  statNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 2,
-  },
-  statDivider: {
-    width: 1,
-    height: 30,
-    backgroundColor: '#FFD700',
-  },
-  profileTabs: {
-    flexDirection: 'row',
-    backgroundColor: '#FFF',
-    marginHorizontal: 15,
-    marginTop: 20,
-    borderRadius: 30,
-    padding: 5,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderRadius: 25,
-  },
-  activeTab: {
-    backgroundColor: '#FFD700',
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#666',
-  },
-  activeTabText: {
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  tabContent: {
-    padding: 15,
-  },
-  orderCard: {
-    backgroundColor: '#FFF',
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-  },
-  orderHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  orderId: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  orderStatus: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  orderStatusText: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  orderDate: {
-    fontSize: 12,
-    color: '#666',
+  rowButtonEmoji: {
+    fontSize: 24,
     marginBottom: 4,
   },
-  orderItems: {
-    fontSize: 14,
+  rowButtonText: {
+    fontSize: 12,
     color: '#333',
-    marginBottom: 8,
   },
-  orderFooter: {
+  updateBanner: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 8,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-  },
-  orderTotal: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  orderDetailsButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: '#FFF9E6',
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-  },
-  orderDetailsText: {
-    fontSize: 11,
-    color: '#333',
-    fontWeight: '500',
-  },
-  addressCard: {
     backgroundColor: '#FFF',
-    borderRadius: 15,
+    marginHorizontal: 15,
+    marginVertical: 10,
     padding: 15,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-  },
-  addressHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  addressTypeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  addressType: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  defaultBadge: {
-    backgroundColor: '#FFF9E6',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#FFD700',
   },
-  defaultBadgeText: {
-    fontSize: 10,
-    color: '#333',
-  },
-  editAddressText: {
-    fontSize: 12,
-    color: '#FFD700',
-    fontWeight: '600',
-  },
-  addressLine: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 2,
-  },
-  addressActions: {
-    flexDirection: 'row',
-    gap: 15,
-    marginTop: 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-  },
-  addressAction: {
-    flex: 1,
-    paddingVertical: 8,
-    alignItems: 'center',
-    backgroundColor: '#FFF9E6',
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-  },
-  addressActionText: {
-    fontSize: 12,
-    color: '#333',
-    fontWeight: '500',
-  },
-  deleteAction: {
-    backgroundColor: '#FFE5E5',
-    borderColor: '#FF4444',
-  },
-  deleteActionText: {
-    color: '#FF4444',
-  },
-  addAddressButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFD700',
-    padding: 15,
-    borderRadius: 15,
-    marginTop: 10,
-    gap: 8,
-  },
-  addAddressIcon: {
-    fontSize: 20,
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  addAddressText: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '600',
-  },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#FFD700',
-  },
-  settingIcon: {
-    fontSize: 24,
-    marginRight: 15,
-  },
-  settingInfo: {
-    flex: 1,
-  },
-  settingTitle: {
+  updateTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 'bold',
     color: '#333',
   },
-  settingSubtitle: {
+  updateDesc: {
     fontSize: 12,
     color: '#666',
     marginTop: 2,
   },
-  settingArrow: {
-    fontSize: 20,
-    color: '#666',
+  updateVersion: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 2,
   },
-  logoutButton: {
-    marginTop: 20,
-    borderColor: '#FF4444',
+  updateButton: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 20,
   },
-  logoutText: {
-    color: '#FF4444',
+  updateButtonText: {
+    color: '#333',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
-  profileFooter: {
+  appearanceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFD700',
+  },
+  appearanceLabel: {
+    fontSize: 16,
+    color: '#333',
+  },
+  appearanceValue: {
+    backgroundColor: '#FFF',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#FFD700',
+  },
+  appearanceText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  hideSensitive: {
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFD700',
+  },
+  hideSensitiveTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+    marginBottom: 4,
+  },
+  hideSensitiveDesc: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 6,
+  },
+  knowMore: {
+    fontSize: 12,
+    color: '#FFD700',
+    fontWeight: '600',
+  },
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 20,
+    marginBottom: 5,
+    paddingHorizontal: 15,
+  },
+  footer: {
+    alignItems: 'center',
+    padding: 25,
     marginTop: 10,
   },
-  profileFooterText: {
+  footerText: {
     fontSize: 12,
     color: '#666',
   },
