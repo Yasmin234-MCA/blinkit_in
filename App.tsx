@@ -18,7 +18,7 @@ const App = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: false   }}
         />
         <Stack.Screen
           name="Home"
