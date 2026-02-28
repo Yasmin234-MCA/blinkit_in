@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -14,8 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-  const [hideSensitive, setHideSensitive] = useState(false); 
-
+  const [hideSensitive, setHideSensitive] = useState(false);
 
   const MenuRow = ({ icon, label, onPress, rightElement }: any) => (
     <TouchableOpacity style={styles.menuRow} onPress={onPress}>
@@ -29,7 +27,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
@@ -39,21 +37,25 @@ const ProfileScreen = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-       
+        {/* Account info */}
         <View style={styles.accountHeader}>
           <Text style={styles.accountTitle}>Your account</Text>
           <Text style={styles.phoneNumber}>6384330170</Text>
         </View>
 
+        {/* Birthday row with icon */}
         <TouchableOpacity style={styles.birthdayRow}>
-          <View>
-            <Text style={styles.birthdayLabel}>Add your birthday</Text>
-            <Text style={styles.birthdayHint}>Enter details</Text>
+          <View style={styles.rowLeft}>
+            <Icon name="gift" size={20} color="#333" style={styles.rowIcon} />
+            <View>
+              <Text style={styles.birthdayLabel}>Add your birthday</Text>
+              <Text style={styles.birthdayHint}>Enter details</Text>
+            </View>
           </View>
           <Icon name="chevron-right" size={20} color="#999" />
         </TouchableOpacity>
 
-        
+        {/* Quick actions */}
         <View style={styles.quickActions}>
           <TouchableOpacity style={styles.quickAction}>
             <Icon name="shopping-bag" size={24} color="#333" />
@@ -69,7 +71,7 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
 
-      
+        {/* Update banner */}
         <View style={styles.updateBanner}>
           <View style={styles.updateLeft}>
             <Icon name="download-cloud" size={20} color="#333" />
@@ -81,7 +83,7 @@ const ProfileScreen = () => {
           <Text style={styles.version}>v17.79.1</Text>
         </View>
 
-        
+        {/* Appearance */}
         <TouchableOpacity style={styles.appearanceRow}>
           <View style={styles.rowLeft}>
             <Icon name="sun" size={20} color="#333" style={styles.rowIcon} />
@@ -93,7 +95,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
 
-        
+        {/* Hide sensitive items */}
         <View style={styles.toggleRow}>
           <View style={styles.toggleLeft}>
             <Icon name="eye-off" size={20} color="#333" style={styles.rowIcon} />
@@ -114,7 +116,7 @@ const ProfileScreen = () => {
           <Text style={styles.knowMoreText}>Know more</Text>
         </TouchableOpacity>
 
-        
+        {/* Your information */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Your information</Text>
           <MenuRow icon="map-pin" label="Address book" />
@@ -125,7 +127,7 @@ const ProfileScreen = () => {
           <MenuRow icon="clipboard" label="Your prescriptions" />
         </View>
 
-     
+        {/* Payment and coupons */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Payment and coupons</Text>
           <MenuRow icon="wallet" label="Wallet" />
@@ -135,15 +137,13 @@ const ProfileScreen = () => {
           <MenuRow icon="award" label="Your collected rewards" />
         </View>
 
-      
+        {/* About us */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>About us</Text>
           <MenuRow icon="lock" label="Account privacy" />
           <MenuRow icon="bell" label="Notification preferences" />
           <MenuRow icon="log-out" label="Log out" onPress={() => {/* handle logout */}} />
         </View>
-
-    
       </ScrollView>
     </SafeAreaView>
   );
@@ -327,5 +327,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-
 });
