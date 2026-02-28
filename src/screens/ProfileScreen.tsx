@@ -1,4 +1,4 @@
-// ProfileScreen.tsx
+
 import React, { useState } from 'react';
 import {
   View,
@@ -14,9 +14,9 @@ import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
-  const [hideSensitive, setHideSensitive] = useState(false); // Example state for toggle
+  const [hideSensitive, setHideSensitive] = useState(false); 
 
-  // Reusable row component for sections
+
   const MenuRow = ({ icon, label, onPress, rightElement }: any) => (
     <TouchableOpacity style={styles.menuRow} onPress={onPress}>
       <View style={styles.rowLeft}>
@@ -29,7 +29,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header with back button */}
+      
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
@@ -39,13 +39,12 @@ const ProfileScreen = () => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Account header */}
+       
         <View style={styles.accountHeader}>
           <Text style={styles.accountTitle}>Your account</Text>
           <Text style={styles.phoneNumber}>6384330170</Text>
         </View>
 
-        {/* Add your birthday */}
         <TouchableOpacity style={styles.birthdayRow}>
           <View>
             <Text style={styles.birthdayLabel}>Add your birthday</Text>
@@ -70,7 +69,7 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* App update banner */}
+      
         <View style={styles.updateBanner}>
           <View style={styles.updateLeft}>
             <Icon name="download-cloud" size={20} color="#333" />
@@ -82,7 +81,7 @@ const ProfileScreen = () => {
           <Text style={styles.version}>v17.79.1</Text>
         </View>
 
-        {/* Appearance selector */}
+        
         <TouchableOpacity style={styles.appearanceRow}>
           <View style={styles.rowLeft}>
             <Icon name="sun" size={20} color="#333" style={styles.rowIcon} />
@@ -94,7 +93,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableOpacity>
 
-        {/* Hide sensitive items toggle */}
+        
         <View style={styles.toggleRow}>
           <View style={styles.toggleLeft}>
             <Icon name="eye-off" size={20} color="#333" style={styles.rowIcon} />
@@ -115,7 +114,7 @@ const ProfileScreen = () => {
           <Text style={styles.knowMoreText}>Know more</Text>
         </TouchableOpacity>
 
-        {/* Your information section */}
+        
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Your information</Text>
           <MenuRow icon="map-pin" label="Address book" />
@@ -126,7 +125,7 @@ const ProfileScreen = () => {
           <MenuRow icon="clipboard" label="Your prescriptions" />
         </View>
 
-        {/* Payment and coupons section */}
+     
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Payment and coupons</Text>
           <MenuRow icon="wallet" label="Wallet" />
@@ -136,7 +135,7 @@ const ProfileScreen = () => {
           <MenuRow icon="award" label="Your collected rewards" />
         </View>
 
-        {/* About us section */}
+      
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>About us</Text>
           <MenuRow icon="lock" label="Account privacy" />

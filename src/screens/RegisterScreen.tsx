@@ -34,7 +34,6 @@ const RegisterScreen = () => {
       return;
     }
     setLoading(true);
-    // Simulate registration – replace with actual auth logic
     setTimeout(() => {
       setLoading(false);
       navigation.replace('Home');

@@ -176,7 +176,7 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        {/* SEARCH */}
+        
         <View style={styles.searchContainer}>
           <Icon name="search" size={24} color="black" />
           <TextInput
@@ -250,7 +250,7 @@ const HomeScreen = () => {
           )}
         />
 
-        {/* OFFERS */}
+        
         <Text style={styles.sectionTitle}>Offers For You</Text>
         <View style={styles.offerRow}>
           <View style={styles.offerCard}>
@@ -263,7 +263,7 @@ const HomeScreen = () => {
           </View>
         </View>
 
-        {/* GROCERY & KITCHEN SECTION */}
+       
 <Text style={styles.sectionTitle}>Grocery & Kitchen</Text>
 {grocerySections.map((section, idx) => (
   <View key={section.title + idx} style={styles.subsection}>
@@ -289,7 +289,7 @@ const HomeScreen = () => {
   </View>
 ))}
 
-{/* SNACKS & DRINKS SECTION */}
+
 <Text style={styles.sectionTitle}>Snacks & Drinks</Text>
 {snacksSections.map((section, idx) => (
   <View key={section.title + idx} style={styles.subsection}>

@@ -28,7 +28,7 @@ const LoginScreen = () => {
       return;
     }
     setLoading(true);
-    // Simulate login – replace with actual authentication logic
+   
     setTimeout(() => {
       setLoading(false);
       navigation.replace('Home');
